@@ -1,0 +1,14 @@
+[project]
+name = "backend"
+version = "0.1.0"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlmodel"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "black"
+]
