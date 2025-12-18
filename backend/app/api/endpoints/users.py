@@ -1,10 +1,34 @@
-from fastapi import APIRouter, Depends
-from sqlmodel import Session
-from .... import schemas, crud
-from ....database import get_session
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel import Session, select
+from ... import schemas, crud, models # Import models
+from ...database import get_session
+from uuid import UUID
+from ...auth_schemas import UserCreate, Token # Import UserCreate and Token from auth_schemas
+from .auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES # Import from auth.py
+from datetime import timedelta
 
 router = APIRouter()
 
-@router.post("/users/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_session)):
-    return crud.create_user(db=db, user=user)
+@router.post(
+    "/",
+    response_model=Token,
+    responses={
+        409: {"model": schemas.HTTPError, "description": "Email already registered"},
+        500: {"model": schemas.HTTPError},
+    },
+)
+def create_user(user: UserCreate, db: Session = Depends(get_session)):
+    try:
+        db_user = crud.create_user(db=db, user=user)  # Create user
+
+        # After creating the user, generate a token for immediate login
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": str(db_user.id)}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
+    except HTTPException:
+        raise # Re-raise HTTPException to be handled by FastAPI
+    except Exception:
+        # In production, log the error `e` to a logging service
+        raise HTTPException(status_code=500, detail="Internal server error")

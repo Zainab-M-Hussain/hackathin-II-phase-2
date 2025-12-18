@@ -1,7 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://shera125-hacku2-phase2.hf.space/api/:path*',
+      },
+    ]
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
+

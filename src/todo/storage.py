@@ -64,7 +64,7 @@ class TodoCRUDSubagent:
             id=str(uuid4()),
             title=title,
             description=description,
-            completed=False,
+            status="pending",
             created_at=datetime.now()
         )
         return self.storage.add_task(task)
@@ -84,7 +84,7 @@ class TodoCRUDSubagent:
         return self.storage.get_all_tasks()
     
     def update_task(self, task_id: str, title: Optional[str] = None,
-                    description: Optional[str] = None, completed: Optional[bool] = None) -> Optional[Task]:
+                    description: Optional[str] = None, status: Optional[str] = None) -> Optional[Task]:
         """
         Updates specific task with provided values.
         Validates title length if provided.
@@ -99,8 +99,8 @@ class TodoCRUDSubagent:
             update_data['title'] = title
         if description is not None:
             update_data['description'] = description
-        if completed is not None:
-            update_data['completed'] = completed
+        if status is not None:
+            update_data['status'] = status
 
         return self.storage.update_task(task_id, **update_data)
     
@@ -113,11 +113,11 @@ class TodoCRUDSubagent:
     
     def toggle_task_status(self, task_id: str) -> Optional[Task]:
         """
-        Changes completed status to the opposite value.
+        Changes status to the opposite value.
         Returns updated Task or None if task doesn't exist.
         """
         task = self.storage.get_task(task_id)
         if task:
-            task.completed = not task.completed
-            return self.storage.update_task(task_id, completed=task.completed)
+            task.status = "completed" if task.status == "pending" else "pending"
+            return self.storage.update_task(task_id, status=task.status)
         return None

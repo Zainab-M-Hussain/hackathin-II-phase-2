@@ -12,7 +12,7 @@ class Task:
     id: str  # Using string representation of UUID
     title: str
     description: Optional[str] = None
-    completed: bool = False
+    status: str = "pending"
     created_at: datetime = None
     
     def __post_init__(self):
@@ -23,5 +23,4 @@ class Task:
             self.created_at = datetime.now()
     
     def __str__(self):
-        status = "✓" if self.completed else "○"
-        return f"[{status}] {self.title}"
+        return f"[{self.status}] {self.title}"
