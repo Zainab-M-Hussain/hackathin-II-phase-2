@@ -6,6 +6,14 @@ import { Task, TaskCreate, TaskUpdate } from "../types/task"
 import { useToast } from './ToastProvider';
 import { motion } from "framer-motion";
 
+// Helper function to normalize task to ensure categories is always an array
+function normalizeTask(task: Task): Task {
+  return {
+    ...task,
+    categories: Array.isArray(task.categories) ? task.categories : (task.categories || []),
+  };
+}
+
 interface TaskFormProps {
     userId: string;
     refreshTasks: () => void;
@@ -20,7 +28,7 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
         editingTask?.due_date ? new Date(editingTask.due_date).toISOString().slice(0, 16) : ""
     )
     const [priority, setPriority] = useState<TaskCreate['priority']>(editingTask?.priority || "medium")
-    const [categories, setCategories] = useState(editingTask?.categories?.join(", ") || "")
+    const [categories, setCategories] = useState(editingTask?.categories ? editingTask.categories.join(", ") : "")
     const [isRecurring, setIsRecurring] = useState(editingTask?.is_recurring || false)
     const [recurrencePattern, setRecurrencePattern] = useState<TaskCreate['recurrence_pattern']>(editingTask?.recurrence_pattern || "daily")
 
@@ -32,7 +40,7 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
             setDescription(editingTask.description || "")
             setDueDate(editingTask.due_date ? new Date(editingTask.due_date).toISOString().slice(0, 16) : "")
             setPriority(editingTask.priority || "medium")
-            setCategories(editingTask.categories?.join(", ") || "")
+            setCategories(editingTask.categories ? editingTask.categories.join(", ") : "")
             setIsRecurring(editingTask.is_recurring || false)
             setRecurrencePattern(editingTask.recurrence_pattern || "daily")
         } else {
@@ -49,24 +57,29 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        const categoryArray = categories.split(',').map(cat => cat.trim()).filter(cat => cat !== '');
+        const categoryArray = categories ? categories.split(',').map(cat => cat.trim()).filter(cat => cat !== '') : [];
 
         try {
             if (editingTask) {
-                const updatedTask: TaskUpdate = {
+                const updatedTaskData: TaskUpdate = {
                     title,
                     description: description || undefined,
                     due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
                     priority,
+                    status: editingTask.status, // Preserve the current status
                     categories: categoryArray,
                     is_recurring: isRecurring,
                     recurrence_pattern: isRecurring ? recurrencePattern : undefined,
                 }
-                await updateTask(userId, editingTask.id, updatedTask)
+                const updatedTask = await updateTask(userId, editingTask.id, updatedTaskData);
+                if (!updatedTask) {
+                    throw new Error("Failed to update task: API returned no data");
+                }
+                refreshTasks();
                 addToast("Task updated successfully!", "success");
                 if (onCloseEdit) onCloseEdit();
             } else {
-                const newTask: TaskCreate = {
+                const newTaskData: TaskCreate = {
                     title,
                     description: description || undefined,
                     due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
@@ -76,7 +89,11 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
                     recurrence_pattern: isRecurring ? recurrencePattern : undefined,
                     status: 'pending'
                 }
-                await createTask(userId, newTask)
+                const createdTask = await createTask(userId, newTaskData);
+                if (!createdTask) {
+                    throw new Error("Failed to create task: API returned no data");
+                }
+                refreshTasks();
                 addToast("Task added successfully!", "success");
             }
 
@@ -87,20 +104,19 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
             setCategories("")
             setIsRecurring(false)
             setRecurrencePattern("daily")
-            refreshTasks();
         } catch (error: any) {
             addToast(`Error: ${error.message}`, "error");
         }
     }
 
-    const inputClasses = "block w-full rounded-lg border-0 p-3 text-white shadow-sm bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300";
+    const inputClasses = "block w-full input-field p-3 text-white placeholder:text-gray-400 focus:outline-none transition-all duration-300";
 
     return (
         <motion.form
             onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-xl"
+            className="space-y-6 card p-6"
         >
             <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-yellow-400 bg-clip-text text-transparent mb-6">
                 {editingTask ? "Edit Task" : "Add New Task"}
@@ -200,14 +216,14 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
                     <button
                         type="button"
                         onClick={onCloseEdit}
-                        className="px-4 py-2 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700/50 transition-colors"
+                        className="btn btn-outline px-4 py-2 rounded-lg"
                     >
                         Cancel
                     </button>
                 )}
                 <button
                     type="submit"
-                    className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-lg text-white font-semibold shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+                    className="btn btn-primary px-6 py-3 rounded-lg font-semibold"
                 >
                     {editingTask ? "Update Task" : "Add Task"}
                 </button>

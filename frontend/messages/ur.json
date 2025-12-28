@@ -1,11 +1,6 @@
 {
-  "Common": {
-    "hello": "ہیلو",
-    "welcome": "خوش آمدید",
-    "home": "ہوم",
-    "about": "ہمارے بارے میں"
-  },
-  "Page": {
-    "title": "اردو ویب سائٹ"
+  "ChatPage": {
+    "placeholder": "اپنا پیغام ٹائپ کریں...",
+    "sendButton": "بھیجیں"
   }
 }

@@ -4,11 +4,15 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://shera125-hacku2-phase2.hf.space/api/:path*',
+        destination: 'http://localhost:8000/api/:path*',
       },
     ]
   },
 };
 
-module.exports = nextConfig;
+// Add next-intl configuration
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin();
+
+module.exports = withNextIntl(nextConfig);
 

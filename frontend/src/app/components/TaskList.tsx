@@ -23,7 +23,7 @@ export default function TaskList({ tasks, userId, refreshTasks, selectedTaskIds,
 
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
-            const allTaskIds = tasks.map(task => task.id);
+            const allTaskIds = tasks && Array.isArray(tasks) ? tasks.map(task => task.id) : [];
             onSelectedTasksChange(allTaskIds);
         } else {
             onSelectedTasksChange([]);
@@ -52,9 +52,9 @@ export default function TaskList({ tasks, userId, refreshTasks, selectedTaskIds,
             </motion.div>
 
             <AnimatePresence>
-                {tasks.map(task => (
+                {tasks && Array.isArray(tasks) && tasks.map(task => (
                     <motion.div
-                        key={task.id}
+                        key={`motion-${task.id}`}
                         layout
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +62,7 @@ export default function TaskList({ tasks, userId, refreshTasks, selectedTaskIds,
                         transition={{ duration: 0.2 }}
                     >
                         <TaskCard
-                            key={task.id}
+                            key={`card-${task.id}`}
                             task={task}
                             userId={userId}
                             refreshTasks={refreshTasks}

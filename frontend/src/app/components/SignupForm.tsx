@@ -27,7 +27,11 @@ export default function SignupForm() {
             storeJwt(data.access_token)
             router.push("/dashboard") // Redirect to dashboard after signup
         } catch (err: any) {
-            setError(err.message || "Signup failed")
+            if (err.status === 409) {
+                setError("Email already exists. Please try a different email.");
+            } else {
+                setError(err.message || "Signup failed");
+            }
         } finally {
             setIsLoading(false)
         }

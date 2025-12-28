@@ -4,6 +4,7 @@ from uuid import UUID
 from . import models, schemas
 from fastapi import HTTPException, status
 from passlib.context import CryptContext # Import CryptContext
+import logging
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -36,6 +37,7 @@ def create_task(db: Session, task: schemas.TaskCreate, user_id: UUID):
         db.refresh(db_task)
         return db_task
     except Exception as e:
+        logging.error(f"Error creating task: {e}")
         raise
 
 def get_tasks(db: Session, user_id: UUID, skip: int = 0, limit: int = 100):

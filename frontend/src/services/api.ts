@@ -1,7 +1,7 @@
 import { Task, TaskCreate, TaskUpdate } from '../app/types/task';
 import { getStoredJwt } from './authService'; // Import the function
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://shera125-hacku2-phase2.hf.space";
+const API_BASE_URL = "";
 
 // Helper function for API calls
 export class ApiError extends Error {
@@ -75,7 +75,25 @@ export async function loginUser(email: string, password: string): Promise<{ acce
 }
 
 export async function signupUser(email: string, password: string, name: string): Promise<{ access_token: string }> {
-    return callApi<{ access_token: string }>('/api/users/', 'POST', { email, password, name });
+    const response = await fetch(`${API_BASE_URL}/api/users/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
+    });
+
+    if (!response.ok) {
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (e) {
+            errorData = { detail: `API Error: ${response.statusText}` };
+        }
+        throw new ApiError(errorData.detail || `API Error: ${response.statusText}`, response.status);
+    }
+
+    return response.json();
 }
 
 
@@ -90,7 +108,7 @@ export async function getTasks(
         due_before?: string;
     }
 ): Promise<Task[]> {
-    let endpoint = `/api/users/tasks`;
+    let endpoint = `/api/users/${userId}/tasks`;
     const queryParams = new URLSearchParams();
 
     if (search) {
@@ -112,22 +130,22 @@ export async function getTasks(
 }
 
 export async function createTask(userId: string, task: TaskCreate): Promise<Task> {
-    return callApi<Task>(`/api/users/tasks`, 'POST', task);
+    return callApi<Task>(`/api/users/${userId}/tasks`, 'POST', task);
 }
 
 export async function updateTask(userId: string, taskId: string, task: TaskUpdate): Promise<Task> {
-    return callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', task);
+    return callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', task);
 }
 
 export async function deleteTask(userId: string, taskId: string): Promise<void> {
-    return callApi<void>((`/api/users/tasks/${taskId}`), 'DELETE');
+    return callApi<void>((`/api/users/${userId}/tasks/${taskId}`), 'DELETE');
 }
 
 export async function toggleTaskCompletion(userId: string, taskId: string): Promise<Task> {
     // Fetch the current task
-    const task = await callApi<Task>(`/api/users/tasks/${taskId}`, 'GET');
+    const task = await callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'GET');
     // Update the status by calling PUT
-    return callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', {
+    return callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', {
         ...task,
         status: task.status === 'completed' ? 'pending' : 'completed'
     });
@@ -136,7 +154,7 @@ export async function toggleTaskCompletion(userId: string, taskId: string): Prom
 export async function bulkDeleteTasks(userId: string, taskIds: string[]): Promise<void> {
     // Since backend doesn't support bulk delete, delete each task individually
     const deletePromises = taskIds.map(taskId =>
-        callApi<void>(`/api/users/tasks/${taskId}`, 'DELETE')
+        callApi<void>(`/api/users/${userId}/tasks/${taskId}`, 'DELETE')
     );
     await Promise.all(deletePromises);
 }
@@ -144,7 +162,7 @@ export async function bulkDeleteTasks(userId: string, taskIds: string[]): Promis
 export async function bulkToggleTaskCompletion(userId: string, taskIds: string[], status: 'pending' | 'completed'): Promise<Task[]> {
     // Since backend doesn't support bulk toggle, toggle each task individually
     const promises = taskIds.map(taskId =>
-        callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', { status })
+        callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', { status })
     );
     return Promise.all(promises);
 }
@@ -155,7 +173,7 @@ export async function exportTasks(userId: string, format: 'json' | 'csv'): Promi
     if (format === 'json') {
         return JSON.stringify(tasks, null, 2);
     } else { // CSV
-        if (tasks.length === 0) return '';
+        if (!tasks || tasks.length === 0) return '';
 
         // Create CSV header from task keys
         const headers = Object.keys(tasks[0]);

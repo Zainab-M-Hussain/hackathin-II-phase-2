@@ -6,6 +6,7 @@ from uuid import UUID
 from ...auth_schemas import UserCreate, Token # Import UserCreate and Token from auth_schemas
 from .auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES # Import from auth.py
 from datetime import timedelta
+from sqlalchemy.exc import IntegrityError
 
 router = APIRouter()
 
@@ -27,8 +28,8 @@ def create_user(user: UserCreate, db: Session = Depends(get_session)):
             data={"sub": str(db_user.id)}, expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
-    except HTTPException:
-        raise # Re-raise HTTPException to be handled by FastAPI
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail="Email already registered")
     except Exception:
         # In production, log the error `e` to a logging service
         raise HTTPException(status_code=500, detail="Internal server error")

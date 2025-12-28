@@ -62,7 +62,7 @@ def add_task_interactive(console, service):
 
     try:
         task = service.add_task(title, description)
-        console.print(f"[green]Task ban gaya![/green] (ID: {task.id})\n")
+        console.print(f"[green]Task created successfully![/green] (ID: {task.id})\n")
     except ValueError as e:
         console.print(f"[red]{str(e)}[/red]\n")
 
@@ -74,7 +74,7 @@ def list_tasks_interactive(console, service):
     tasks = service.get_all_tasks()
 
     if not tasks:
-        console.print("[yellow]Koi tasks nahi hain[/yellow]\n")
+        console.print("[yellow]No tasks found[/yellow]\n")
         return
 
     # Create a rich table
@@ -108,7 +108,7 @@ def update_task_interactive(console, service):
 
     tasks = service.get_all_tasks()
     if not tasks:
-        console.print("[yellow]Koi tasks nahi hain[/yellow]\n")
+        console.print("[yellow]No tasks found[/yellow]\n")
         return
 
     list_tasks_interactive(console, service)
@@ -134,7 +134,7 @@ def update_task_interactive(console, service):
             new_description = None
 
         updated_task = service.update_task(task.id, title=new_title, description=new_description)
-        console.print(f"[green]Task update ho gaya![/green]\n")
+        console.print(f"[green]Task updated successfully![/green]\n")
     except ValueError:
         console.print("[red]Please enter a valid number![/red]\n")
     except Exception as e:
@@ -147,7 +147,7 @@ def delete_task_interactive(console, service):
 
     tasks = service.get_all_tasks()
     if not tasks:
-        console.print("[yellow]Koi tasks nahi hain[/yellow]\n")
+        console.print("[yellow]No tasks found[/yellow]\n")
         return
 
     list_tasks_interactive(console, service)
@@ -164,7 +164,7 @@ def delete_task_interactive(console, service):
 
         result = service.delete_task(task.id)
         if result:
-            console.print(f"[green]Task delete ho gaya![/green]\n")
+            console.print(f"[green]Task deleted successfully![/green]\n")
         else:
             console.print(f"[red]Task could not be deleted![/red]\n")
     except ValueError:
@@ -180,7 +180,7 @@ def toggle_task_status_interactive(console, service, complete=True):
 
     tasks = service.get_all_tasks()
     if not tasks:
-        console.print("[yellow]Koi tasks nahi hain[/yellow]\n")
+        console.print("[yellow]No tasks found[/yellow]\n")
         return
 
     list_tasks_interactive(console, service)
@@ -196,7 +196,7 @@ def toggle_task_status_interactive(console, service, complete=True):
         console.print(f"[blue]Toggling task: {task.title}[/blue]\n")
 
         updated_task = service.toggle_task_status(task.id)
-        status_text = "complete ho gaya" if complete else "incomplete ho gaya"
+        status_text = "marked as complete" if complete else "marked as incomplete"
         console.print(f"[green]Task {status_text}![/green]\n")
     except ValueError:
         console.print("[red]Please enter a valid number![/red]\n")

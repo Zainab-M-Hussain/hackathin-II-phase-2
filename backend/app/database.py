@@ -1,6 +1,7 @@
+import os
+
 from sqlmodel import create_engine, Session
 from dotenv import load_dotenv
-import os
 
 # Construct the path to the .env file, assuming it's in the 'backend' directory
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
@@ -17,6 +18,8 @@ else:
 
 
 engine = create_engine(DATABASE_URL, echo=False)
+
+
 
 def get_session():
     with Session(engine) as session:

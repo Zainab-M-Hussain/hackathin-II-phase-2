@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import DarkModeToggle from "@/app/components/DarkModeToggle";
 import MenuIcon from "@/app/components/icons/MenuIcon";
 import CloseIcon from "@/app/components/icons/CloseIcon";
+import FloatingChatWidget from "@/app/components/FloatingChatWidget";
 
 export default function HomePage() {
   const router = useRouter();
@@ -41,6 +42,14 @@ export default function HomePage() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => router.push("/chat")}
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 transition-all duration-300 font-medium shadow-lg hover:shadow-emerald-500/25"
+            >
+              AI Chat
+            </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -88,6 +97,17 @@ export default function HomePage() {
           exit={{ opacity: 0, y: -20 }}
           className="md:hidden absolute top-0 left-0 w-full h-screen bg-gray-900/90 backdrop-blur-lg z-40 flex flex-col items-center justify-center gap-8"
         >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              router.push("/chat");
+              setIsMenuOpen(false);
+            }}
+            className="text-2xl px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 transition-all duration-300 font-medium shadow-lg hover:shadow-emerald-500/25"
+          >
+            AI Chat
+          </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -167,19 +187,25 @@ export default function HomePage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={handleLoginClick}
-              className="group relative px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-xl text-lg font-semibold overflow-hidden transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 min-w-[200px]"
+              onClick={() => router.push("/chat")}
+              className="btn btn-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 min-w-[200px]"
             >
-              <span className="relative z-10">Access Dashboard</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-700 to-emerald-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-emerald-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></div>
+              Try AI Chat
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLoginClick}
+              className="btn btn-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 min-w-[200px]"
+            >
+              Access Dashboard
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSignupClick}
-              className="px-8 py-4 rounded-xl font-semibold border-2 border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 transition-all duration-300 min-w-[200px]"
+              className="btn btn-outline px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 min-w-[200px]"
             >
               Get Started
             </motion.button>
@@ -227,7 +253,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
-                className="p-8 bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl hover:border-emerald-500/30 transition-all duration-300 hover:transform hover:-translate-y-2"
+                className="p-8 card"
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-bold text-emerald-400 mb-3">{feature.title}</h3>
@@ -245,7 +271,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
-            className="max-w-3xl mx-auto p-12 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl border border-gray-700/50"
+            className="max-w-3xl mx-auto p-12 card"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-yellow-400 bg-clip-text text-transparent">
               Ready to Transform Your Productivity?
@@ -258,7 +284,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSignupClick}
-                className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-xl text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                className="btn btn-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300"
               >
                 Start Free Trial
               </motion.button>
@@ -266,7 +292,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLoginClick}
-                className="px-8 py-4 rounded-xl font-medium border border-gray-600 hover:bg-gray-700/50 transition-all duration-300"
+                className="btn btn-outline px-8 py-4 rounded-xl text-lg font-medium transition-all duration-300"
               >
                 Sign In
               </motion.button>
@@ -279,6 +305,9 @@ export default function HomePage() {
       <footer className="relative z-10 px-6 py-8 text-center text-gray-500 text-sm">
         <p>© 2025 TaskMastery. Precision tools for productive minds.</p>
       </footer>
+
+      {/* Floating Chat Widget */}
+      <FloatingChatWidget />
     </div>
   );
 }

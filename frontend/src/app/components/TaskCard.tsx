@@ -63,9 +63,8 @@ export default function TaskCard({ task, userId, refreshTasks, onSelectToggle, i
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className={`
-                relative p-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm
-                border border-gray-700/50 rounded-xl mb-4 shadow-lg transition-all duration-300
-                hover:border-emerald-500/50 hover:shadow-emerald-500/10 hover:-translate-y-1
+                relative p-6 card mb-4 transition-all duration-300
+                hover:-translate-y-1
                 ${task.status === 'completed' ? 'opacity-70 grayscale' : ''}
                 overflow-hidden
             `}
@@ -150,17 +149,20 @@ export default function TaskCard({ task, userId, refreshTasks, onSelectToggle, i
                         </div>
                     </div>
 
-                    {task.categories && task.categories.length > 0 && (
+                    {task.categories && Array.isArray(task.categories) && task.categories.length > 0 && (
                         <div className="mt-4 flex flex-wrap gap-2">
-                            {task.categories.map((cat, index) => (
-                                <span
-                                    key={cat}
-                                    className="inline-block bg-gray-700/50 rounded-lg px-3 py-1 text-xs font-medium text-gray-300 border border-gray-600"
-                                    style={{ animationDelay: `${index * 0.1}s` }}
-                                >
-                                    #{cat}
-                                </span>
-                            ))}
+                            {task.categories.map((cat, index) => {
+                                if (!cat) return null; // Skip if cat is null/undefined
+                                return (
+                                    <span
+                                        key={`${task.id}-${index}`} // Using task.id and index as key to ensure uniqueness
+                                        className="inline-block bg-gray-700/30 rounded-lg px-3 py-1 text-xs font-medium text-gray-300 border border-gray-600/50"
+                                        style={{ animationDelay: `${index * 0.1}s` }}
+                                    >
+                                        #{cat}
+                                    </span>
+                                );
+                            })}
                         </div>
                     )}
                 </>

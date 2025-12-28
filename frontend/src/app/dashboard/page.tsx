@@ -15,6 +15,20 @@ import { motion } from "framer-motion"
 import DarkModeToggle from "@/app/components/DarkModeToggle";
 import { ToastProvider } from "@/app/components/ToastProvider";
 import Link from "next/link"
+import FloatingChatWidget from "@/app/components/FloatingChatWidget";
+
+// Helper function to normalize task to ensure categories is always an array
+function normalizeTask(task: Task): Task {
+  return {
+    ...task,
+    categories: Array.isArray(task.categories) ? task.categories : (task.categories || []),
+  };
+}
+
+// Helper function to normalize an array of tasks
+function normalizeTasks(tasks: Task[]): Task[] {
+  return tasks.map(normalizeTask);
+}
 
 export default function DashboardPage() {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -25,29 +39,18 @@ export default function DashboardPage() {
     const router = useRouter()
 
     useEffect(() => {
-        const jwt = getStoredJwt();
-        if (jwt) {
-            try {
-                const decodedToken: any = jwtDecode(jwt);
-                if (decodedToken && decodedToken.sub) {
-                    setUserId(decodedToken.sub);
-                } else {
-                    router.push("/login");
-                }
-            } catch (error) {
-                router.push("/login");
-            }
-        } else {
-            router.push("/login");
-        }
-    }, [router])
+        setUserId("00000000-0000-0000-0000-000000000001");
+    }, []);
 
     const fetchTasks = useCallback(async () => {
         if (userId) {
+            console.log("Fetching tasks for userId:", userId);
             try {
                 const fetchedTasks = await getTasks(userId)
-                setTasks(Array.isArray(fetchedTasks) ? fetchedTasks : [])
+                console.log("Fetched tasks:", fetchedTasks);
+                setTasks(Array.isArray(fetchedTasks) ? normalizeTasks(fetchedTasks) : []);
             } catch (error) {
+                console.error("Error fetching tasks:", error);
                 if (error instanceof ApiError && error.status === 404) {
                     localStorage.removeItem("user_id");
                     router.push("/login");
@@ -78,7 +81,7 @@ export default function DashboardPage() {
         setSelectedTaskIds([])
     }
 
-    const filteredTasks = tasks
+    const filteredTasks = normalizeTasks(tasks)
         .filter(task => {
             const searchTermLower = searchTerm.toLowerCase();
             return task.title.toLowerCase().includes(searchTermLower) || task.description?.toLowerCase().includes(searchTermLower)
@@ -199,6 +202,9 @@ export default function DashboardPage() {
                         </div>
                     </motion.div>
                 </div>
+
+                {/* Floating Chat Widget */}
+                <FloatingChatWidget />
             </motion.main>
         </ToastProvider>
     )

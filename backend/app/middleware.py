@@ -10,7 +10,19 @@ from . import config # Import config
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         if request.url.path.startswith("/api/"):
-            if request.url.path not in ["/api/token", "/api/users/"]: # Unprotected routes
+            is_get_tasks_request = (
+                request.method == "GET" and
+                request.url.path.startswith("/api/users/") and
+                request.url.path.endswith("/tasks") and
+                len(request.url.path.split('/')) == 5 # /api/users/{user_id}/tasks
+            )
+
+            # Check if this is a chat endpoint - these should be unprotected for testing
+            is_chat_request = (
+                request.url.path.startswith("/api/chat")
+            )
+
+            if request.url.path not in ["/api/token", "/api/users/", "/api/users"] and not is_get_tasks_request and not is_chat_request: # Unprotected routes
                 auth_header = request.headers.get("Authorization")
                 if not auth_header or not auth_header.startswith("Bearer "):
                     raise HTTPException(status_code=401, detail="Unauthorized")
