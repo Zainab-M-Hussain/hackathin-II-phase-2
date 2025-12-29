@@ -1,7 +1,7 @@
 import { Task, TaskCreate, TaskUpdate } from '../app/types/task';
 import { getStoredJwt } from './authService'; // Import the function
 
-const API_BASE_URL = "";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 // Helper function for API calls
 export class ApiError extends Error {
