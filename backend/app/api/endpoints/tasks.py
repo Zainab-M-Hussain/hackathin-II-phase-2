@@ -14,16 +14,16 @@ def get_current_user_id(request: Request) -> UUID:
     return UUID(user_id)
 
 @router.post(
-    "/{user_id}/tasks",
+    "/tasks",
     response_model=schemas.Task,
     responses={
         500: {"model": schemas.HTTPError},
     },
 )
 def create_task_for_user(
-    user_id: UUID,
     task: schemas.TaskCreate,
     db: Session = Depends(get_session),
+    user_id: UUID = Depends(get_current_user_id),
 ):
     try:
         return crud.create_task(db=db, task=task, user_id=user_id)
@@ -31,56 +31,13 @@ def create_task_for_user(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get(
-    "/{user_id}/tasks",
+    "/tasks",
     response_model=List[schemas.Task],
     responses={
         500: {"model": schemas.HTTPError},
     },
 )
 def read_tasks_for_user(
-    user_id: UUID,
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_session),
-):
-    try:
-        tasks = crud.get_tasks(db, user_id=user_id, skip=skip, limit=limit)
-        return tasks
-    except Exception:
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.get(
-    "/{user_id}/tasks/{task_id}",
-    response_model=schemas.Task,
-    responses={
-        404: {"model": schemas.HTTPError},
-        500: {"model": schemas.HTTPError},
-    },
-)
-def read_task_for_user(
-    user_id: UUID,
-    task_id: UUID,
-    db: Session = Depends(get_session),
-):
-    try:
-        db_task = crud.get_task(db, user_id=user_id, task_id=task_id)
-        if db_task is None:
-            raise HTTPException(status_code=404, detail="Task not found")
-        return db_task
-    except HTTPException:
-        raise
-    except Exception:
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.get(
-    "/tasks",
-    response_model=List[schemas.Task],
-    responses={
-        401: {"model": schemas.HTTPError},
-        500: {"model": schemas.HTTPError},
-    },
-)
-def read_tasks(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_session),
@@ -96,12 +53,11 @@ def read_tasks(
     "/tasks/{task_id}",
     response_model=schemas.Task,
     responses={
-        401: {"model": schemas.HTTPError},
         404: {"model": schemas.HTTPError},
         500: {"model": schemas.HTTPError},
     },
 )
-def read_task(
+def read_task_for_user(
     task_id: UUID,
     db: Session = Depends(get_session),
     user_id: UUID = Depends(get_current_user_id),
@@ -116,8 +72,10 @@ def read_task(
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
+
+
 @router.put(
-    "/{user_id}/tasks/{task_id}",
+    "/tasks/{task_id}",
     response_model=schemas.Task,
     responses={
         404: {"model": schemas.HTTPError},
@@ -125,10 +83,10 @@ def read_task(
     },
 )
 def update_task(
-    user_id: UUID,
     task_id: UUID,
     task: schemas.TaskUpdate,
     db: Session = Depends(get_session),
+    user_id: UUID = Depends(get_current_user_id),
 ):
     try:
         db_task = crud.update_task(db, user_id=user_id, task_id=task_id, task=task)
@@ -141,7 +99,7 @@ def update_task(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.delete(
-    "/{user_id}/tasks/{task_id}",
+    "/tasks/{task_id}",
     responses={
         200: {"description": "Task deleted successfully"},
         404: {"model": schemas.HTTPError},
@@ -149,9 +107,9 @@ def update_task(
     },
 )
 def delete_task(
-    user_id: UUID,
     task_id: UUID,
     db: Session = Depends(get_session),
+    user_id: UUID = Depends(get_current_user_id),
 ):
     try:
         db_task = crud.delete_task(db, user_id=user_id, task_id=task_id)

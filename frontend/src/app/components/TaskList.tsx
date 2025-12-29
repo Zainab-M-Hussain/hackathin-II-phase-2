@@ -6,13 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface TaskListProps {
     tasks: Task[];
-    userId: string;
     refreshTasks: () => void;
     selectedTaskIds: string[];
     onSelectedTasksChange: (selectedIds: string[]) => void;
 }
 
-export default function TaskList({ tasks, userId, refreshTasks, selectedTaskIds, onSelectedTasksChange }: TaskListProps) {
+export default function TaskList({ tasks, refreshTasks, selectedTaskIds, onSelectedTasksChange }: TaskListProps) {
 
     const handleSelectToggle = (taskId: string) => {
         const newSelected = selectedTaskIds.includes(taskId)
@@ -64,7 +63,6 @@ export default function TaskList({ tasks, userId, refreshTasks, selectedTaskIds,
                         <TaskCard
                             key={`card-${task.id}`}
                             task={task}
-                            userId={userId}
                             refreshTasks={refreshTasks}
                             onSelectToggle={handleSelectToggle}
                             isSelected={selectedTaskIds.includes(task.id)}

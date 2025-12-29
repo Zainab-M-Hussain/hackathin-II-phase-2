@@ -12,19 +12,21 @@ from .base import BaseMCPTool, MCPToolError
 from .. import crud, schemas
 from ..database import get_session, engine
 from sqlmodel import Session
+from contextlib import contextmanager
+from sqlalchemy.exc import OperationalError
 
 
 class AddTaskTool(BaseMCPTool):
     """MCP Tool for adding a new task"""
-    
+
     @property
     def name(self) -> str:
         return "add_task"
-    
+
     @property
     def description(self) -> str:
         return "Adds a new task to the user's task list."
-    
+
     @property
     def parameters(self) -> Dict[str, Any]:
         return {
@@ -56,7 +58,7 @@ class AddTaskTool(BaseMCPTool):
             },
             "required": ["title", "user_id"]
         }
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Execute the add_task operation"""
         title = kwargs.get("title")
@@ -64,14 +66,14 @@ class AddTaskTool(BaseMCPTool):
         user_id = kwargs.get("user_id")
         priority = kwargs.get("priority", "medium")
         due_date = kwargs.get("due_date")
-        
+
         # Validate inputs
         if not title or len(title) < 1 or len(title) > 200:
             raise MCPToolError("Title must be between 1 and 200 characters")
-        
+
         if not user_id:
             raise MCPToolError("user_id is required")
-        
+
         try:
             # Create the task schema
             task_create = schemas.TaskCreate(
@@ -80,9 +82,10 @@ class AddTaskTool(BaseMCPTool):
                 priority=priority,
                 due_date=due_date
             )
-            
-            # Create the task in the database
-            with Session(engine) as db:
+
+            # Create the task in the database using a session from the dependency
+            from ..database import get_session
+            with next(get_session()) as db:
                 task = crud.create_task(db, task_create, UUID(user_id))
 
                 # Return the created task
@@ -95,21 +98,23 @@ class AddTaskTool(BaseMCPTool):
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "due_date": task.due_date.isoformat() if task.due_date else None
                 }
+        except OperationalError as e:
+            raise MCPToolError(f"Database connection error: {str(e)}")
         except Exception as e:
             raise MCPToolError(f"Failed to create task: {str(e)}")
 
 
 class ListTasksTool(BaseMCPTool):
     """MCP Tool for listing tasks"""
-    
+
     @property
     def name(self) -> str:
         return "list_tasks"
-    
+
     @property
     def description(self) -> str:
         return "Retrieves all tasks for a specific user."
-    
+
     @property
     def parameters(self) -> Dict[str, Any]:
         return {
@@ -134,18 +139,18 @@ class ListTasksTool(BaseMCPTool):
             },
             "required": ["user_id"]
         }
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Execute the list_tasks operation"""
         user_id = kwargs.get("user_id")
         status_filter = kwargs.get("status_filter", "all")
         priority_filter = kwargs.get("priority_filter", "all")
-        
+
         if not user_id:
             raise MCPToolError("user_id is required")
-        
+
         try:
-            with Session(engine) as db:
+            with next(get_session()) as db:
                 tasks = crud.get_tasks(db, UUID(user_id))
 
                 # Apply filters if specified
@@ -169,21 +174,23 @@ class ListTasksTool(BaseMCPTool):
                     })
 
                 return result
+        except OperationalError as e:
+            raise MCPToolError(f"Database connection error: {str(e)}")
         except Exception as e:
             raise MCPToolError(f"Failed to retrieve tasks: {str(e)}")
 
 
 class UpdateTaskTool(BaseMCPTool):
     """MCP Tool for updating a task"""
-    
+
     @property
     def name(self) -> str:
         return "update_task"
-    
+
     @property
     def description(self) -> str:
         return "Updates an existing task."
-    
+
     @property
     def parameters(self) -> Dict[str, Any]:
         return {
@@ -223,7 +230,7 @@ class UpdateTaskTool(BaseMCPTool):
             },
             "required": ["task_id", "user_id"]
         }
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Execute the update_task operation"""
         task_id = kwargs.get("task_id")
@@ -233,10 +240,10 @@ class UpdateTaskTool(BaseMCPTool):
         status = kwargs.get("status")
         priority = kwargs.get("priority")
         due_date = kwargs.get("due_date")
-        
+
         if not task_id or not user_id:
             raise MCPToolError("task_id and user_id are required")
-        
+
         try:
             # Create the task update schema
             task_update = schemas.TaskUpdate(
@@ -246,8 +253,8 @@ class UpdateTaskTool(BaseMCPTool):
                 priority=priority,
                 due_date=due_date
             )
-            
-            with Session(engine) as db:
+
+            with next(get_session()) as db:
                 task = crud.update_task(db, UUID(task_id), task_update, UUID(user_id))
 
                 if not task:
@@ -264,21 +271,23 @@ class UpdateTaskTool(BaseMCPTool):
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None,
                     "due_date": task.due_date.isoformat() if task.due_date else None
                 }
+        except OperationalError as e:
+            raise MCPToolError(f"Database connection error: {str(e)}")
         except Exception as e:
             raise MCPToolError(f"Failed to update task: {str(e)}")
 
 
 class DeleteTaskTool(BaseMCPTool):
     """MCP Tool for deleting a task"""
-    
+
     @property
     def name(self) -> str:
         return "delete_task"
-    
+
     @property
     def description(self) -> str:
         return "Deletes an existing task."
-    
+
     @property
     def parameters(self) -> Dict[str, Any]:
         return {
@@ -295,17 +304,17 @@ class DeleteTaskTool(BaseMCPTool):
             },
             "required": ["task_id", "user_id"]
         }
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Execute the delete_task operation"""
         task_id = kwargs.get("task_id")
         user_id = kwargs.get("user_id")
-        
+
         if not task_id or not user_id:
             raise MCPToolError("task_id and user_id are required")
-        
+
         try:
-            with Session(engine) as db:
+            with next(get_session()) as db:
                 task = crud.delete_task(db, UUID(task_id), UUID(user_id))
 
                 if task:
@@ -315,21 +324,23 @@ class DeleteTaskTool(BaseMCPTool):
                     }
                 else:
                     raise MCPToolError("Task not found or user doesn't have permission to delete it")
+        except OperationalError as e:
+            raise MCPToolError(f"Database connection error: {str(e)}")
         except Exception as e:
             raise MCPToolError(f"Failed to delete task: {str(e)}")
 
 
 class ToggleTaskCompletionTool(BaseMCPTool):
     """MCP Tool for toggling task completion status"""
-    
+
     @property
     def name(self) -> str:
         return "toggle_task_completion"
-    
+
     @property
     def description(self) -> str:
         return "Toggles the completion status of a task."
-    
+
     @property
     def parameters(self) -> Dict[str, Any]:
         return {
@@ -346,17 +357,17 @@ class ToggleTaskCompletionTool(BaseMCPTool):
             },
             "required": ["task_id", "user_id"]
         }
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Execute the toggle_task_completion operation"""
         task_id = kwargs.get("task_id")
         user_id = kwargs.get("user_id")
-        
+
         if not task_id or not user_id:
             raise MCPToolError("task_id and user_id are required")
-        
+
         try:
-            with Session(engine) as db:
+            with next(get_session()) as db:
                 # Get the current task
                 task = crud.get_task(db, UUID(task_id), UUID(user_id))
 
@@ -378,5 +389,7 @@ class ToggleTaskCompletionTool(BaseMCPTool):
                     }
                 else:
                     raise MCPToolError("Failed to update task status")
+        except OperationalError as e:
+            raise MCPToolError(f"Database connection error: {str(e)}")
         except Exception as e:
             raise MCPToolError(f"Failed to toggle task completion: {str(e)}")

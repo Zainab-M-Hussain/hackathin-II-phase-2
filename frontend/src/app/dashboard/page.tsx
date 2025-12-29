@@ -39,14 +39,24 @@ export default function DashboardPage() {
     const router = useRouter()
 
     useEffect(() => {
-        setUserId("00000000-0000-0000-0000-000000000001");
-    }, []);
+        const token = getStoredJwt();
+        if (token) {
+            try {
+                const decoded: { sub: string } = jwtDecode(token);
+                setUserId(decoded.sub);
+            } catch (error) {
+                console.error("Invalid token:", error);
+                router.push("/login");
+            }
+        } else {
+            router.push("/login");
+        }
+    }, [router]);
 
     const fetchTasks = useCallback(async () => {
         if (userId) {
-            console.log("Fetching tasks for userId:", userId);
             try {
-                const fetchedTasks = await getTasks(userId)
+                const fetchedTasks = await getTasks()
                 console.log("Fetched tasks:", fetchedTasks);
                 setTasks(Array.isArray(fetchedTasks) ? normalizeTasks(fetchedTasks) : []);
             } catch (error) {
@@ -151,7 +161,7 @@ export default function DashboardPage() {
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.4 }}
                             >
-                                <TaskForm userId={userId} refreshTasks={fetchTasks} />
+                                <TaskForm refreshTasks={fetchTasks} />
                             </motion.div>
                         </div>
                         <div className="lg:col-span-2">
@@ -175,7 +185,6 @@ export default function DashboardPage() {
                                     transition={{ duration: 0.3 }}
                                 >
                                     <BulkActions
-                                        userId={userId}
                                         selectedTaskIds={selectedTaskIds}
                                         refreshTasks={() => {
                                             fetchTasks();
@@ -194,7 +203,6 @@ export default function DashboardPage() {
                                 <TaskList
                                     tasks={filteredTasks}
                                     refreshTasks={fetchTasks}
-                                    userId={userId}
                                     selectedTaskIds={selectedTaskIds}
                                     onSelectedTasksChange={handleSelectedTasksChange}
                                 />

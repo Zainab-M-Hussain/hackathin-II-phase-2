@@ -9,12 +9,9 @@ load_dotenv(dotenv_path=dotenv_path)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Fallback for debugging if .env is not loaded
+# Fallback for production if .env is not loaded
 if not DATABASE_URL:
-    print("WARNING: DATABASE_URL not found in .env file or environment variables. Using a fallback SQLite database.")
-    DATABASE_URL = "sqlite:///../../test.db"
-else:
-    print(f"DATABASE_URL loaded successfully: {DATABASE_URL}")
+    DATABASE_URL = "sqlite:///../../test.db"  # Fallback to local SQLite for development
 
 
 engine = create_engine(DATABASE_URL, echo=False)

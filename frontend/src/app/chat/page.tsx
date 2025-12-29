@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { getStoredJwt } from '@/services/authService'; // Import the function to get stored JWT
 
 // Define types for our messages
 interface Message {
@@ -49,9 +50,31 @@ export default function ChatPage() {
     setInput("");
 
     try {
-      const response = await fetch("/api/chat", {
+      // Get the JWT token using the same method as FloatingChatWidget
+      const jwt = getStoredJwt();
+      console.log("JWT Token:", jwt); // Debug log
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json"
+      };
+
+      // Add Authorization header if JWT token exists
+      if (jwt) {
+        headers["Authorization"] = `Bearer ${jwt}`;
+        console.log('Authorization header added');
+      } else {
+        console.log("No JWT token found"); // Debug log
+      }
+
+      let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+      // Replace 0.0.0.0 with localhost for browser requests
+      if (API_BASE_URL.includes('0.0.0.0')) {
+        API_BASE_URL = API_BASE_URL.replace('0.0.0.0', 'localhost');
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/chat/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ message: input, locale: locale }),
       });
 

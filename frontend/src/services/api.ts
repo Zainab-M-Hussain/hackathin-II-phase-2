@@ -1,7 +1,7 @@
 import { Task, TaskCreate, TaskUpdate } from '../app/types/task';
 import { getStoredJwt } from './authService'; // Import the function
 
-const API_BASE_URL = "";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 // Helper function for API calls
 export class ApiError extends Error {
@@ -98,7 +98,6 @@ export async function signupUser(email: string, password: string, name: string):
 
 
 export async function getTasks(
-    userId: string,
     search?: string,
     filters?: {
         status?: Task['status'] | 'all';
@@ -108,7 +107,7 @@ export async function getTasks(
         due_before?: string;
     }
 ): Promise<Task[]> {
-    let endpoint = `/api/users/${userId}/tasks`;
+    let endpoint = `/api/users/tasks`;
     const queryParams = new URLSearchParams();
 
     if (search) {
@@ -129,47 +128,47 @@ export async function getTasks(
     return callApi<Task[]>(endpoint, 'GET');
 }
 
-export async function createTask(userId: string, task: TaskCreate): Promise<Task> {
-    return callApi<Task>(`/api/users/${userId}/tasks`, 'POST', task);
+export async function createTask(task: TaskCreate): Promise<Task> {
+    return callApi<Task>(`/api/users/tasks`, 'POST', task);
 }
 
-export async function updateTask(userId: string, taskId: string, task: TaskUpdate): Promise<Task> {
-    return callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', task);
+export async function updateTask(taskId: string, task: TaskUpdate): Promise<Task> {
+    return callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', task);
 }
 
-export async function deleteTask(userId: string, taskId: string): Promise<void> {
-    return callApi<void>((`/api/users/${userId}/tasks/${taskId}`), 'DELETE');
+export async function deleteTask(taskId: string): Promise<void> {
+    return callApi<void>((`/api/users/tasks/${taskId}`), 'DELETE');
 }
 
-export async function toggleTaskCompletion(userId: string, taskId: string): Promise<Task> {
+export async function toggleTaskCompletion(taskId: string): Promise<Task> {
     // Fetch the current task
-    const task = await callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'GET');
+    const task = await callApi<Task>(`/api/users/tasks/${taskId}`, 'GET');
     // Update the status by calling PUT
-    return callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', {
+    return callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', {
         ...task,
         status: task.status === 'completed' ? 'pending' : 'completed'
     });
 }
 
-export async function bulkDeleteTasks(userId: string, taskIds: string[]): Promise<void> {
+export async function bulkDeleteTasks(taskIds: string[]): Promise<void> {
     // Since backend doesn't support bulk delete, delete each task individually
     const deletePromises = taskIds.map(taskId =>
-        callApi<void>(`/api/users/${userId}/tasks/${taskId}`, 'DELETE')
+        callApi<void>(`/api/users/tasks/${taskId}`, 'DELETE')
     );
     await Promise.all(deletePromises);
 }
 
-export async function bulkToggleTaskCompletion(userId: string, taskIds: string[], status: 'pending' | 'completed'): Promise<Task[]> {
+export async function bulkToggleTaskCompletion(taskIds: string[], status: 'pending' | 'completed'): Promise<Task[]> {
     // Since backend doesn't support bulk toggle, toggle each task individually
     const promises = taskIds.map(taskId =>
-        callApi<Task>(`/api/users/${userId}/tasks/${taskId}`, 'PUT', { status })
+        callApi<Task>(`/api/users/tasks/${taskId}`, 'PUT', { status })
     );
     return Promise.all(promises);
 }
 
-export async function exportTasks(userId: string, format: 'json' | 'csv'): Promise<any> {
+export async function exportTasks(format: 'json' | 'csv'): Promise<any> {
     // Since backend doesn't support export, fetch all tasks and format on frontend
-    const tasks = await getTasks(userId);
+    const tasks = await getTasks();
     if (format === 'json') {
         return JSON.stringify(tasks, null, 2);
     } else { // CSV

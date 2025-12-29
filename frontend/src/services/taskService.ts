@@ -1,6 +1,6 @@
 import { getStoredJwt } from './authService';
 
-const API_URL = 'http://localhost:8000/api'; // Assuming the backend is running on port 8000
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
 
 export const getTasks = async () => {
   const token = getStoredJwt();

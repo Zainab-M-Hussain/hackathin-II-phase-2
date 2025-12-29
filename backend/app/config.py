@@ -4,11 +4,16 @@ from dotenv import load_dotenv
 # Load environment variables once
 load_dotenv()
 
-SECRET_KEY = os.getenv("BETTER_AUTH_SECRET", "super-secret-key") # TODO: Replace with a strong, randomly generated secret in production
-if SECRET_KEY == "super-secret-key":
-    # In a real production environment, you might want to raise an exception here
-    # to prevent the app from starting with a default, insecure key.
-    pass
+SECRET_KEY = os.getenv("BETTER_AUTH_SECRET")
+if not SECRET_KEY:
+    # For development only - in production, this should be set as an environment variable
+    import warnings
+    SECRET_KEY = "0000000000000000000000000000000000000000000000000000000000000000"  # Default for development only
+    warnings.warn(
+        "Using default SECRET_KEY for development. "
+        "Please set BETTER_AUTH_SECRET environment variable for production.",
+        UserWarning
+    )
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30

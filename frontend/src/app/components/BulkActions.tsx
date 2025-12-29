@@ -5,14 +5,12 @@ import { useToast } from './ToastProvider'; // Corrected import path
 import { motion } from "framer-motion";
 
 interface BulkActionsProps {
-  userId: string;
   selectedTaskIds: string[];
   refreshTasks: () => void;
   clearSelection: () => void;
 }
 
 export default function BulkActions({
-  userId,
   selectedTaskIds,
   refreshTasks,
   clearSelection,
@@ -23,7 +21,7 @@ export default function BulkActions({
       if (selectedTaskIds.length === 0) return;
       if (confirm(`Are you sure you want to delete ${selectedTaskIds.length} selected tasks?`)) {
           try {
-              await bulkDeleteTasks(userId, selectedTaskIds);
+              await bulkDeleteTasks(selectedTaskIds);
               addToast(`${selectedTaskIds.length} tasks deleted successfully!`, "success");
               refreshTasks();
               clearSelection();
@@ -36,7 +34,7 @@ export default function BulkActions({
     const handleBulkMarkComplete = async () => {
       if (selectedTaskIds.length === 0) return;
       try {
-          await bulkToggleTaskCompletion(userId, selectedTaskIds, 'completed');
+          await bulkToggleTaskCompletion(selectedTaskIds, 'completed');
           addToast(`${selectedTaskIds.length} tasks marked completed!`, "success");
           refreshTasks();
           clearSelection();
@@ -48,7 +46,7 @@ export default function BulkActions({
     const handleBulkMarkPending = async () => {
       if (selectedTaskIds.length === 0) return;
       try {
-          await bulkToggleTaskCompletion(userId, selectedTaskIds, 'pending');
+          await bulkToggleTaskCompletion(selectedTaskIds, 'pending');
           addToast(`${selectedTaskIds.length} tasks marked pending!`, "success");
           refreshTasks();
           clearSelection();

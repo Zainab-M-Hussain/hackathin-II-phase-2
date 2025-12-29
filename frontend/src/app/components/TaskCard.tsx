@@ -11,20 +11,19 @@ import { motion } from "framer-motion";
 
 interface TaskCardProps {
     task: Task;
-    userId: string;
     refreshTasks: () => void;
     onSelectToggle?: (taskId: string) => void;
     isSelected?: boolean;
 }
 
-export default function TaskCard({ task, userId, refreshTasks, onSelectToggle, isSelected }: TaskCardProps) {
+export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelected }: TaskCardProps) {
     const [isEditing, setIsEditing] = useState(false);
     const { addToast } = useToast();
 
     const handleDelete = async () => {
         if (confirm("Are you sure you want to delete this task?")) {
             try {
-                await deleteTask(userId, task.id);
+                await deleteTask(task.id);
                 addToast("Task deleted successfully!", "success");
                 refreshTasks();
             } catch (error: any) {
@@ -35,7 +34,7 @@ export default function TaskCard({ task, userId, refreshTasks, onSelectToggle, i
 
     const handleToggleComplete = async () => {
         try {
-            await toggleTaskCompletion(userId, task.id);
+            await toggleTaskCompletion(task.id);
             addToast(`Task marked ${task.status === 'completed' ? 'pending' : 'completed'}!`, "success");
             refreshTasks();
         } catch (error: any) {
@@ -79,7 +78,6 @@ export default function TaskCard({ task, userId, refreshTasks, onSelectToggle, i
 
             {isEditing ? (
                 <TaskForm
-                    userId={userId}
                     refreshTasks={() => {
                         setIsEditing(false);
                         refreshTasks();

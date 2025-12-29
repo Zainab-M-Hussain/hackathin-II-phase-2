@@ -15,13 +15,12 @@ function normalizeTask(task: Task): Task {
 }
 
 interface TaskFormProps {
-    userId: string;
     refreshTasks: () => void;
     editingTask?: Task;
     onCloseEdit?: () => void;
 }
 
-export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdit }: TaskFormProps) {
+export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: TaskFormProps) {
     const [title, setTitle] = useState(editingTask?.title || "")
     const [description, setDescription] = useState(editingTask?.description || "")
     const [dueDate, setDueDate] = useState<string>(
@@ -71,7 +70,7 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
                     is_recurring: isRecurring,
                     recurrence_pattern: isRecurring ? recurrencePattern : undefined,
                 }
-                const updatedTask = await updateTask(userId, editingTask.id, updatedTaskData);
+                const updatedTask = await updateTask(editingTask.id, updatedTaskData);
                 if (!updatedTask) {
                     throw new Error("Failed to update task: API returned no data");
                 }
@@ -89,7 +88,7 @@ export default function TaskForm({ userId, refreshTasks, editingTask, onCloseEdi
                     recurrence_pattern: isRecurring ? recurrencePattern : undefined,
                     status: 'pending'
                 }
-                const createdTask = await createTask(userId, newTaskData);
+                const createdTask = await createTask(newTaskData);
                 if (!createdTask) {
                     throw new Error("Failed to create task: API returned no data");
                 }

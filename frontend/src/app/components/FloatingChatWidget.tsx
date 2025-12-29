@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getStoredJwt } from '@/services/authService'; // Import the function to get stored JWT
 
 interface Message {
   role: string;
@@ -62,14 +63,29 @@ export default function FloatingChatWidget() {
     setInput('');
     setIsLoading(true);
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+    // Replace 0.0.0.0 with localhost for browser requests
+    if (API_BASE_URL.includes('0.0.0.0')) {
+      API_BASE_URL = API_BASE_URL.replace('0.0.0.0', 'localhost');
+    }
+
+    const headers: HeadersInit = { "Content-Type": "application/json" };
+    const jwt = getStoredJwt();
+    console.log("JWT Token:", jwt); // Debug log
+    if (jwt) {
+      headers["Authorization"] = `Bearer ${jwt}`;
+    } else {
+      console.log("No JWT token found"); // Debug log
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/chat/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ message: input, locale: locale }),
       });
 
+      console.log("Response status:", response.status); // Debug log
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
