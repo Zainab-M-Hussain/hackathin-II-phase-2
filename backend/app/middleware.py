@@ -9,6 +9,10 @@ from . import config # Import config
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        # Allow OPTIONS requests to pass through for CORS preflight
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
         if request.url.path.startswith("/api/"):
             is_get_tasks_request = (
                 request.method == "GET" and
