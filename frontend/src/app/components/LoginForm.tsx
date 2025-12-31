@@ -41,10 +41,10 @@ export default function LoginForm() {
         >
             <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 shadow-2xl">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-yellow-400 bg-clip-text text-transparent mb-2">
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
                         Welcome Back
                     </h2>
-                    <p className="text-gray-400">Sign in to your account</p>
+                    <p className="text-gray-400">Sign in to your FlowTask account</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -59,7 +59,7 @@ export default function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
                             required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-white"
+                            className="w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-white"
                         />
                     </div>
 
@@ -75,7 +75,7 @@ export default function LoginForm() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
                                 required
-                                className="w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 text-white pr-12"
+                                className="w-full px-4 py-3 rounded-lg bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-white pr-12"
                             />
                             <button
                                 type="button"
@@ -92,14 +92,14 @@ export default function LoginForm() {
                             <input
                                 id="remember-me"
                                 type="checkbox"
-                                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-600 rounded bg-gray-700"
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-600 rounded bg-gray-700"
                             />
                             <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
                                 Remember me
                             </label>
                         </div>
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                            <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
                                 Forgot password?
                             </a>
                         </div>
@@ -110,7 +110,7 @@ export default function LoginForm() {
                         disabled={isLoading}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-lg text-white font-semibold shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 rounded-lg text-white font-semibold shadow-lg hover:shadow-indigo-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
                             <div className="flex items-center justify-center">
@@ -136,7 +136,7 @@ export default function LoginForm() {
                 <div className="mt-6 text-center text-sm text-gray-400">
                     <p>
                         Don't have an account?{' '}
-                        <Link href="/signup" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                        <Link href="/signup" className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
                             Sign up for free
                         </Link>
                     </p>

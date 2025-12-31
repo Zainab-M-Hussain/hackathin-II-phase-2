@@ -31,7 +31,7 @@ export default function DarkModeToggle() {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={toggleDarkMode}
-      className="p-3 rounded-full bg-gradient-to-r from-gray-700/50 to-gray-800/50 border border-gray-600 text-gray-300 hover:text-white shadow-lg hover:shadow-emerald-500/10 transition-all duration-300"
+      className="p-3 rounded-full bg-gradient-to-r from-gray-700/50 to-gray-800/50 border border-gray-600 text-gray-300 hover:text-white shadow-lg hover:shadow-indigo-500/10 transition-all duration-300"
       aria-label="Toggle dark mode"
     >
       <motion.div

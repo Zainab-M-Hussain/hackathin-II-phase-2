@@ -32,14 +32,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tasks, categories, or descriptions..."
-          className="block w-full rounded-lg border-0 py-3 pl-10 text-white bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300"
+          className="block w-full rounded-lg border-0 py-3 pl-10 text-white bg-gray-700/50 border border-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
         />
       </div>
       <motion.button
         type="submit"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-medium shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+        className="px-4 py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium shadow-lg hover:shadow-indigo-500/25 transition-all duration-300"
       >
         Search
       </motion.button>

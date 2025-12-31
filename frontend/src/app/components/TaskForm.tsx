@@ -117,9 +117,16 @@ export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: Tas
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6 card p-6"
         >
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-yellow-400 bg-clip-text text-transparent mb-6">
-                {editingTask ? "Edit Task" : "Add New Task"}
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                    {editingTask ? "Edit Task" : "Add New Task"}
+                </h2>
+                {editingTask && (
+                    <span className="px-3 py-1 bg-indigo-500/20 text-indigo-400 rounded-full text-xs font-medium border border-indigo-500/30">
+                        Editing
+                    </span>
+                )}
+            </div>
 
             <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">Title *</label>
@@ -128,7 +135,7 @@ export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: Tas
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Complete project proposal"
+                    placeholder="e.g. Complete project milestone"
                     required
                     className={inputClasses}
                 />
@@ -140,7 +147,7 @@ export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: Tas
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Add detailed description..."
+                    placeholder="Add task details..."
                     className={`${inputClasses} min-h-[100px] resize-none`}
                 />
             </div>
@@ -178,37 +185,39 @@ export default function TaskForm({ refreshTasks, editingTask, onCloseEdit }: Tas
                     id="categories"
                     value={categories}
                     onChange={(e) => setCategories(e.target.value)}
-                    placeholder="e.g. Work, Personal, Urgent (comma separated)"
+                    placeholder="e.g. Work, Personal, Important (comma separated)"
                     className={inputClasses}
                 />
             </div>
 
-            <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-lg border border-gray-600">
-                <input
-                    id="isRecurring"
-                    type="checkbox"
-                    checked={isRecurring}
-                    onChange={(e) => setIsRecurring(e.target.checked)}
-                    className="h-5 w-5 rounded text-emerald-500 focus:ring-emerald-500 bg-gray-700 border-gray-600"
-                />
-                <label htmlFor="isRecurring" className="text-sm font-medium text-gray-300">Recurring Task</label>
-            </div>
-
-            {isRecurring && (
-                <div className="p-4 bg-gray-700/30 rounded-lg border border-gray-600">
-                    <label htmlFor="recurrencePattern" className="block text-sm font-medium text-gray-300 mb-2">Recurrence Pattern</label>
-                    <select
-                        id="recurrencePattern"
-                        value={recurrencePattern}
-                        onChange={(e) => setRecurrencePattern(e.target.value as TaskCreate['recurrence_pattern'])}
-                        className={inputClasses}
-                    >
-                        <option value="daily" className="bg-gray-800">Daily</option>
-                        <option value="weekly" className="bg-gray-800">Weekly</option>
-                        <option value="monthly" className="bg-gray-800">Monthly</option>
-                    </select>
+            <div className="p-4 bg-gray-700/30 rounded-xl border border-gray-600">
+                <div className="flex items-center gap-3">
+                    <input
+                        id="isRecurring"
+                        type="checkbox"
+                        checked={isRecurring}
+                        onChange={(e) => setIsRecurring(e.target.checked)}
+                        className="h-5 w-5 rounded text-indigo-500 focus:ring-indigo-500 bg-gray-700 border-gray-600"
+                    />
+                    <label htmlFor="isRecurring" className="text-sm font-medium text-gray-300">Recurring Task</label>
                 </div>
-            )}
+
+                {isRecurring && (
+                    <div className="mt-4 pl-8">
+                        <label htmlFor="recurrencePattern" className="block text-sm font-medium text-gray-300 mb-2">Recurrence Pattern</label>
+                        <select
+                            id="recurrencePattern"
+                            value={recurrencePattern}
+                            onChange={(e) => setRecurrencePattern(e.target.value as TaskCreate['recurrence_pattern'])}
+                            className={inputClasses}
+                        >
+                            <option value="daily" className="bg-gray-800">Daily</option>
+                            <option value="weekly" className="bg-gray-800">Weekly</option>
+                            <option value="monthly" className="bg-gray-800">Monthly</option>
+                        </select>
+                    </div>
+                )}
+            </div>
 
             <div className="flex items-center justify-end gap-4 pt-4">
                 {editingTask && (

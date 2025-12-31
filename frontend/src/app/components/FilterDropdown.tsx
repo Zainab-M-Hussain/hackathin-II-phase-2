@@ -30,18 +30,18 @@ export default function FilterDropdown({ onFilterChange }: FilterDropdownProps) 
             <a
               href="#"
               onClick={() => onFilterChange({})}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               All Tasks
             </a>
           </MenuItem>
           <div className="border-t border-gray-700 my-1" />
-          <p className="px-4 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-wider">Status</p>
+          <p className="px-4 py-1 text-xs font-semibold text-indigo-400 uppercase tracking-wider">Status</p>
           <MenuItem>
             <a
               href="#"
               onClick={() => onFilterChange({ status: 'pending' })}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               Pending
             </a>
@@ -50,18 +50,18 @@ export default function FilterDropdown({ onFilterChange }: FilterDropdownProps) 
             <a
               href="#"
               onClick={() => onFilterChange({ status: 'completed' })}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               Completed
             </a>
           </MenuItem>
           <div className="border-t border-gray-700 my-1" />
-          <p className="px-4 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-wider">Priority</p>
+          <p className="px-4 py-1 text-xs font-semibold text-indigo-400 uppercase tracking-wider">Priority</p>
           <MenuItem>
             <a
               href="#"
               onClick={() => onFilterChange({ priority: 'low' })}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               Low
             </a>
@@ -70,7 +70,7 @@ export default function FilterDropdown({ onFilterChange }: FilterDropdownProps) 
             <a
               href="#"
               onClick={() => onFilterChange({ priority: 'medium' })}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               Medium
             </a>
@@ -79,7 +79,7 @@ export default function FilterDropdown({ onFilterChange }: FilterDropdownProps) 
             <a
               href="#"
               onClick={() => onFilterChange({ priority: 'high' })}
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-colors"
+              className="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-400 transition-colors"
             >
               High
             </a>

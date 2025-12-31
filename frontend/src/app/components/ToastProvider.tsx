@@ -26,7 +26,7 @@ const Toast: React.FC<{ toast: Toast; onClose: (id: string) => void }> = ({ toas
   }, [toast.id, onClose]);
 
   const bgColor = {
-    success: 'bg-green-500',
+    success: 'bg-indigo-500',
     error: 'bg-red-500',
     info: 'bg-blue-500',
     warning: 'bg-yellow-500',

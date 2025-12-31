@@ -109,7 +109,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-emerald-900/10 to-black">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-indigo-900/10 to-black">
       <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-gray-900/20 to-gray-900/50">
         {messages.map((msg, index) => (
           <div
@@ -146,8 +146,8 @@ export default function ChatPage() {
         ))}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center text-gray-400 p-8">
-            <div className="mb-6 p-4 bg-emerald-500/10 rounded-full">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-emerald-400">
+            <div className="mb-6 p-4 bg-indigo-500/10 rounded-full">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-indigo-400">
                 <path d="M8 12H16M12 8V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
@@ -164,7 +164,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="input-field w-full px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="input-field w-full px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
               placeholder="Type your message..."
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-1">

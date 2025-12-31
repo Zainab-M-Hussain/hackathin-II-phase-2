@@ -123,7 +123,7 @@ let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
     <div className="fixed bottom-6 right-6 z-50">
       {/* Chat Widget Toggle Button */}
       <motion.button
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/30 flex items-center justify-center text-white hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50"
+        className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white hover:from-indigo-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -151,7 +151,7 @@ let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           >
             {/* Chat Header */}
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-4 text-white">
+            <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 p-4 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 rounded-full bg-white/30"></div>
@@ -172,8 +172,8 @@ let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
             <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-gray-900/20 to-gray-900/50">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                  <div className="mb-4 p-3 bg-emerald-500/10 rounded-full">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-emerald-400">
+                  <div className="mb-4 p-3 bg-indigo-500/10 rounded-full">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-indigo-400">
                       <path d="M8 12H16M12 8V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
@@ -249,7 +249,7 @@ let API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message..."
-                    className="input-field w-full px-4 py-3 pr-12 text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 max-h-32"
+                    className="input-field w-full px-4 py-3 pr-12 text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 max-h-32"
                     rows={1}
                     style={{ minHeight: '44px' }}
                   />

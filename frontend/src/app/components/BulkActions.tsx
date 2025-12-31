@@ -95,7 +95,7 @@ export default function BulkActions({
               px-4 py-2 rounded-lg font-medium transition-all duration-300
               ${isDisabled
                 ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white shadow-lg hover:shadow-emerald-500/20'
+                : 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-lg hover:shadow-indigo-500/20'
               }
             `}
           >

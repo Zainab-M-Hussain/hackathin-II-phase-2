@@ -52,7 +52,7 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
     const priorityColors = {
         high: 'bg-red-500/20 text-red-400 border-red-500/30',
         medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-        low: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+        low: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
     };
 
     return (
@@ -63,18 +63,15 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
             exit={{ opacity: 0, y: -20 }}
             className={`
                 relative p-6 card mb-4 transition-all duration-300
-                hover:-translate-y-1
+                hover:-translate-y-1 hover:shadow-lg
                 ${task.status === 'completed' ? 'opacity-70 grayscale' : ''}
                 overflow-hidden
+                border-l-4
+                ${task.priority === 'high' ? 'border-red-500' :
+                  task.priority === 'medium' ? 'border-yellow-500' :
+                  'border-indigo-500'}
             `}
         >
-            {/* Decorative accent line */}
-            <div className={`
-                absolute top-0 left-0 h-1 w-full
-                ${task.priority === 'high' ? 'bg-gradient-to-r from-red-500 to-red-600' :
-                  task.priority === 'medium' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
-                  'bg-gradient-to-r from-emerald-500 to-emerald-600'}
-            `}></div>
 
             {isEditing ? (
                 <TaskForm
@@ -94,7 +91,7 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
                                     type="checkbox"
                                     checked={isSelected}
                                     onChange={() => onSelectToggle(task.id)}
-                                    className="mt-1 form-checkbox h-5 w-5 text-emerald-500 rounded focus:ring-emerald-500 border-gray-600 bg-gray-700"
+                                    className="mt-1 form-checkbox h-5 w-5 text-indigo-500 rounded focus:ring-indigo-500 border-gray-600 bg-gray-700"
                                 />
                             )}
                             <div className="flex-grow">
@@ -111,9 +108,9 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="p-2 rounded-lg bg-gray-700/50 hover:bg-emerald-600/20 transition-colors border border-gray-600 hover:border-emerald-500/50"
+                                className="p-2 rounded-lg bg-gray-700/50 hover:bg-indigo-600/20 transition-colors border border-gray-600 hover:border-indigo-500/50"
                             >
-                                <EditIcon className="w-4 h-4 text-gray-300 hover:text-emerald-400" />
+                                <EditIcon className="w-4 h-4 text-gray-300 hover:text-indigo-400" />
                             </button>
                             <button
                                 onClick={handleDelete}
@@ -139,9 +136,9 @@ export default function TaskCard({ task, refreshTasks, onSelectToggle, isSelecte
                                 type="checkbox"
                                 checked={task.status === 'completed'}
                                 onChange={handleToggleComplete}
-                                className="form-checkbox h-4 w-4 text-emerald-500 rounded focus:ring-emerald-500 border-gray-600 bg-gray-700"
+                                className="form-checkbox h-4 w-4 text-indigo-500 rounded focus:ring-indigo-500 border-gray-600 bg-gray-700"
                             />
-                            <span className={`capitalize ${task.status === 'completed' ? 'text-emerald-400' : 'text-gray-300'}`}>
+                            <span className={`capitalize ${task.status === 'completed' ? 'text-indigo-400' : 'text-gray-300'}`}>
                                 {task.status}
                             </span>
                         </div>
