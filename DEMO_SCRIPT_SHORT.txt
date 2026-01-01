@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    90-SECOND DEMO SCRIPT (CONDENSED)
+═══════════════════════════════════════════════════════════════════════════════
+
+[0-15 SECONDS] WHAT IT IS
+─────────────────────────────────────────────────────────────────────────────
+"This is a Console Todo Application built with Spec-Driven Development. 
+A task management system in Python with zero external dependencies."
+
+
+[15-30 SECONDS] HOW IT WORKS
+─────────────────────────────────────────────────────────────────────────────
+"Three-layer architecture: data model validates tasks, service layer handles 
+CRUD operations, CLI presents a clean menu. Users can add, view, update, delete, 
+and mark tasks complete."
+
+
+[30-45 SECONDS] DEMO
+─────────────────────────────────────────────────────────────────────────────
+$ python main.py
+
+Select an option (1-6): 1
+Enter task title: Complete documentation
+✓ Task added successfully (ID: 1)
+
+Select an option (1-6): 2
+[1] Complete documentation (Incomplete)
+
+Select an option (1-6): 3
+✓ Task 1 marked as complete
+
+Select an option (1-6): 6
+Thank you for using Todo App. Goodbye!
+
+
+[45-60 SECONDS] WHY IT'S IMPRESSIVE
+─────────────────────────────────────────────────────────────────────────────
+1. Professional Methodology: Spec-Driven Development, 47 implementation tasks,
+   zero critical issues identified.
+
+2. Comprehensive Testing: 77 tests (100% passing), all acceptance criteria 
+   verified automatically.
+
+3. Production Quality: 3-layer architecture, 5 error codes (E001-E005), 3-layer
+   validation, comprehensive error handling.
+
+4. Zero Dependencies: Pure Python 3, stdlib only, cross-platform.
+
+
+[60-75 SECONDS] EXTENSIBILITY GUARANTEE
+─────────────────────────────────────────────────────────────────────────────
+Designed to scale without redesign:
+  • Phase II: Web wrapper (service interface locked)
+  • Phase III: AI integration (extensibility fields reserved)
+  • Phase IV: Cloud deployment (JSON schema defined)
+  • Phase V: Advanced features (modular service design)
+
+
+[75-90 SECONDS] SUMMARY
+─────────────────────────────────────────────────────────────────────────────
+"This is a complete, tested, production-ready application demonstrating that 
+rigorous specification, thorough testing, and clean architecture are essential 
+for building reliable software from day one. 77 tests. Zero issues. Fully 
+extensible. Zero dependencies."
+
+═══════════════════════════════════════════════════════════════════════════════

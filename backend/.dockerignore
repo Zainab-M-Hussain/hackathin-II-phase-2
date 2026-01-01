@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+venv
+*.pyc
+__pycache__
+*.egg-info
+.pytest_cache
+.coverage
+htmlcov
+dist
+build
+*.log
+.env
+.env.local
+node_modules
