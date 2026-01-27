@@ -18,6 +18,14 @@ router = APIRouter()
         500: {"model": schemas.HTTPError},
     },
 )
+@router.post(
+    "",
+    response_model=Token,
+    responses={
+        409: {"model": schemas.HTTPError, "description": "Email already registered"},
+        500: {"model": schemas.HTTPError},
+    },
+)
 def create_user(user: UserCreate, db: Session = Depends(get_session)):
     try:
         db_user = crud.create_user(db=db, user=user)  # Create user

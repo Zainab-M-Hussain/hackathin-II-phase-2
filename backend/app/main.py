@@ -15,7 +15,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://todo-app-phase3-again.vercel.app", "http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["https://todo-app-phase3-again.vercel.app", "http://localhost:*", "http://127.0.0.1:*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
